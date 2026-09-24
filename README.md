@@ -104,6 +104,7 @@ workflow around real-time or forecast property risk.
 ## Links
 
 - API docs & signup: https://atlasunited.io/api
+- API docs & signup (TrueFixR): https://truefixr.com/api
 - Demo map: https://atlasunited.io/atlascast/
 - MCP server: https://mcp.atlasunited.io
 - Company: https://truefixr.com
