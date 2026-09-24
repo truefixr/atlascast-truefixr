@@ -5,8 +5,8 @@ property-level storm risk**, delivered at the **address level**, self-serve.
 
 - **TrueFixR** — reported and radar-detected storm events, up to 365 days back, refreshed
   every 15 minutes.
-- **AtlasCast** — forecasted property risk, up to 10 days ahead, refreshed 4x daily, built on
-  NOAA's calibrated outlook data plus our own trained models for perils NOAA doesn't cover.
+- **AtlasCast** — forecasted property risk, up to 10 days ahead, refreshed 4x daily, scored
+  by our own trained models per peril at radar resolution against every address.
 
 One nationwide dataset, one API, address-level resolution — not county shapes.
 
