@@ -100,6 +100,10 @@ workflow around real-time or forecast property risk.
 
 - [Sample data](docs/SAMPLE_DATA.md) -- real API responses, including real property values
 - [Who this is for](docs/WHO_IS_THIS_FOR.md) -- emergency management, insurance, MGA, reinsurance, restoration, research use cases
+- [Methodology](docs/METHODOLOGY.md) -- how risk gets attached to an address, real audited AUC per peril
+- [Comparison](docs/COMPARISON.md) -- how this compares to other real storm/risk data providers
+- [Code examples](docs/CODE_EXAMPLES.md) -- real curl/Python/JS snippets, plus x402 and MCP
+- [Industry evidence](docs/INDUSTRY_EVIDENCE.md) -- real, dated articles and launches proving this is a live industry need, not a guess
 
 ## Links
 
