@@ -83,6 +83,20 @@ GET https://data.truefixr.com/v1/data
 | `limit` | Max records returned |
 | `format` | `json` or `csv` |
 
+Full per-dataset detail — real pricing, free-vs-paid, examples, quirks — is in
+[Datasets](docs/DATASETS.md). Call the endpoint with no params for the same info live,
+straight from the API.
+
+## Batch endpoints
+
+Separate POST routes for real portfolio use (many locations in one call). Full detail in
+[Datasets](docs/DATASETS.md#batch-endpoints).
+
+| Endpoint | Max locations | Pricing |
+|---|---|---|
+| `POST /v1/weather/batch` | 500 | $0.0002/location |
+| `POST /v1/portfolio/risk` | 500 | $0.05/location |
+
 ## Data honesty
 
 A storm event being reported or radar-detected near an address is **not** a property
@@ -98,6 +112,7 @@ workflow around real-time or forecast property risk.
 
 ## Documentation
 
+- [Datasets](docs/DATASETS.md) -- every real dataset, full pricing, free-vs-paid, examples, plus both batch endpoints
 - [Sample data](docs/SAMPLE_DATA.md) -- real API responses, including real property values
 - [Who this is for](docs/WHO_IS_THIS_FOR.md) -- emergency management, insurance, MGA, reinsurance, restoration, research use cases
 - [Methodology](docs/METHODOLOGY.md) -- how risk gets attached to an address, real audited AUC per peril
