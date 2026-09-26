@@ -110,6 +110,14 @@ Insurance underwriting, catastrophe risk, claims, MGAs, reinsurance, emergency m
 disaster response, property research, restoration, and any AI agent building its own
 workflow around real-time or forecast property risk.
 
+The same address-level event archive also works for storm-trend and climate-risk
+research — real dated events per property, per peril, back to 2003, not a modeled
+estimate. For context on why that trend is a live topic: Cotality logged **142 days of
+2"+ hail in 2025** against a 20-year average of 122, and Aon's 2026 Climate and
+Catastrophe Insight Report found severe convective storms have **overtaken tropical
+cyclones as the costliest insured peril of the century** ($68B+ in 2025 damages alone).
+Not our primary audience, but the real per-property data holds up for that use too.
+
 ## Documentation
 
 - [Datasets](docs/DATASETS.md) -- every real dataset, full pricing, free-vs-paid, examples, plus both batch endpoints
