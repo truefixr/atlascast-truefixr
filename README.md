@@ -50,7 +50,7 @@ One nationwide dataset, one API, address-level resolution — not county shapes.
 |---|---|
 | [REST API](https://atlasunited.io/api) | Prepaid API key, `Authorization: Bearer <key>` |
 | [MCP server](https://mcp.atlasunited.io/mcp) | Claude, ChatGPT, and other MCP-compatible AI clients |
-| [x402](https://truefixr.com/.well-known/x402.json) | Autonomous AI agents — pay per request in USDC on Base network, no account needed |
+| [x402](https://data.truefixr.com/.well-known/x402) | Autonomous AI agents — pay per request in USDC on Base network, no account needed |
 
 ## For AI agents
 
@@ -62,7 +62,7 @@ This API is **x402-payable**. An agent with no API key and no human in the loop 
 4. Retry the same request with an `X-Payment` header
 5. Receive the real data — no signup, no email, no waiting
 
-Machine-readable payment manifest: [`/.well-known/x402.json`](https://truefixr.com/.well-known/x402.json)
+Machine-readable payment manifest: [`/.well-known/x402`](https://data.truefixr.com/.well-known/x402)
 Full agent-facing docs: [`llms.txt`](https://truefixr.com/llms.txt)
 
 Free previews (`addresses=false`) require no payment or key at all.
@@ -75,7 +75,7 @@ GET https://data.truefixr.com/v1/data
 
 | Param | Description |
 |---|---|
-| `dataset` | `storms` (reported), `risk` (forecast), `address`, `coverage`, `facilities`, `wildfire`, `at_risk`, `daily` |
+| `dataset` | `storms` (reported), `risk` (forecast), `address`, `history` (full 2003-present archive), `hazard_score` (per-property hazard summary), `weather` (live point weather), `coverage`, `facilities`, `wildfire`, `at_risk`, `daily` |
 | `state` / `county` | 2-letter state code / county name |
 | `peril` | `HAIL`, `THUNDERSTORM_WIND`, `FLASH_FLOOD`, `HEAVY_RAIN`, `FLOOD`, `TORNADO` |
 | `min_severity` / `max_severity` | e.g. `1.5` = 1.5in hail |

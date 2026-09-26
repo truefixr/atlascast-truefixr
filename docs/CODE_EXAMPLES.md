@@ -69,7 +69,7 @@ console.log(data);
 ## Forecasted risk with real property values
 
 ```bash
-curl "https://data.truefixr.com/v1/data?dataset=risk&state=TX&county=Harris&addresses=true&window=16d" \
+curl "https://data.truefixr.com/v1/data?dataset=risk&state=TX&county=Harris&addresses=true&window=10d" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -91,7 +91,7 @@ if r.status_code == 402:
     print(payment_details)
 ```
 
-Full machine-readable payment manifest: [`/.well-known/x402.json`](https://truefixr.com/.well-known/x402.json)
+Full machine-readable payment manifest: [`/.well-known/x402`](https://data.truefixr.com/.well-known/x402)
 
 ## MCP (Claude, ChatGPT, other MCP clients)
 
