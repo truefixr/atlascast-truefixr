@@ -118,6 +118,11 @@ Catastrophe Insight Report found severe convective storms have **overtaken tropi
 cyclones as the costliest insured peril of the century** ($68B+ in 2025 damages alone).
 Not our primary audience, but the real per-property data holds up for that use too.
 
+Same goes for weather prediction markets — `dataset=weather` gives live conditions
+(164 real fields) plus a real 0-48h HRRR forecast, and `dataset=risk` covers real
+forecast storm risk out to 10 days. Both are raw inputs, not a packaged betting product —
+build your own model on top of them.
+
 ## Documentation
 
 - [Datasets](docs/DATASETS.md) -- every real dataset, full pricing, free-vs-paid, examples, plus both batch endpoints
