@@ -1,6 +1,6 @@
 # AtlasCast + TrueFixR
 
-Nationwide API for **reported severe weather events** (hail, wind, flood) and **forecasted
+Nationwide API for **reported severe weather events** (hail, wind, flood, tornado and more) and **forecasted
 property-level storm risk**, delivered at the **address level**, self-serve.
 
 ## The problem this solves
@@ -30,9 +30,10 @@ county-wide guess -- this is the data source, it is live right now, and it is pa
 per-request with no human signup required (see [For AI agents](#for-ai-agents) below).
 
 - **TrueFixR** — reported and radar-detected storm events, up to 365 days back, refreshed
-  every 15 minutes.
+  throughout the day.
 - **AtlasCast** — forecasted property risk, up to 10 days ahead, refreshed 4x daily, scored
-  by our own trained models per peril at radar resolution against every address.
+  by trained models for 10 perils: tornado, hail, wind, flash flood, heavy rain, winter, ice,
+  coastal surge, hurricane and wildfire.
 
 One nationwide dataset, one API, address-level resolution — not county shapes.
 
@@ -75,9 +76,9 @@ GET https://data.truefixr.com/v1/data
 
 | Param | Description |
 |---|---|
-| `dataset` | `storms` (reported), `risk` (forecast), `address`, `history` (full 2003-present archive), `hazard_score` (per-property hazard summary), `weather` (live point weather), `coverage`, `facilities`, `wildfire`, `at_risk`, `daily` |
+| `dataset` | `storms` (reported), `risk` (forecast), `address`, `history` (property storm archive, 20+ years), `hazard_score` (per-property hazard summary), `weather` (live point weather), `coverage`, `facilities`, `wildfire`, `at_risk`, `daily` |
 | `state` / `county` | 2-letter state code / county name |
-| `peril` | `HAIL`, `THUNDERSTORM_WIND`, `FLASH_FLOOD`, `HEAVY_RAIN`, `FLOOD`, `TORNADO` |
+| `peril` | `HAIL`, `THUNDERSTORM_WIND`, `FLASH_FLOOD`, `HEAVY_RAIN`, `FLOOD`, `TORNADO`, and more (for example `HEAVY_SNOW`, `LIGHTNING`, `WILDFIRE`) |
 | `min_severity` / `max_severity` | e.g. `1.5` = 1.5in hail |
 | `addresses` | `false` = free preview (counts, severities, cost estimate). `true` = real address-level records, requires payment. |
 | `limit` | Max records returned |
@@ -111,7 +112,7 @@ disaster response, property research, restoration, and any AI agent building its
 workflow around real-time or forecast property risk.
 
 The same address-level event archive also works for storm-trend and climate-risk
-research — real dated events per property, per peril, back to 2003, not a modeled
+research — real dated events per property, per peril, going back 20+ years, not a modeled
 estimate. For context on why that trend is a live topic: Cotality logged **142 days of
 2"+ hail in 2025** against a 20-year average of 122, and Aon's 2026 Climate and
 Catastrophe Insight Report found severe convective storms have **overtaken tropical
