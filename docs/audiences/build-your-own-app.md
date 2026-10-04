@@ -1,48 +1,35 @@
-# For Developers -- Build Your Own App or Product on This Data
+# For developers: build your own app or product on this data
 
-You don't have to be an insurer or EM office to use this. This is raw, real, address-level
-data, cheap enough ($0.05/address) to build a product on top of and resell.
+Address-level data, cheap enough ($0.05 per address) to build a product on top of.
 
-## What you could actually build
+## Products you can call
 
-- **A storm alert app** -- notify homeowners/property managers when their address enters a
-  forecast risk window (`dataset=risk`), subscription model.
-- **A property risk overlay for real estate sites** -- pull `structure_value` and current risk
-  grade for any address a buyer is looking at.
-- **A parametric insurance quoting tool** -- real launched products (Vortex Weather Insurance's
-  HailSafe, Renewable Guard's parametric hail coverage) already use address-level hail data as
-  a payout trigger. Build the quoting layer, use this as the data layer underneath it.
-- **A contractor/restoration lead tool** -- `dataset=storms` with `distance_mi` and severity
-  gives you exactly what tools like HailTrace and HailWatch already charge $65-119/month for,
-  except you'd own the product instead of paying someone else's subscription.
-- **A Discord/Slack bot** that pings a channel when a tracked address enters risk -- a weekend
-  build, real data underneath it.
-- **An AI agent skill or MCP tool** that other people's agents can call through yours, marking
-  up the $0.05/address wholesale price into your own paid product.
+- **ML Storm Forecast by Address** (`dataset=risk`): forecasts for 10 perils, 24 hours to 10 days, with structure replacement value and estimated people on every address record.
+- **Model-Based Weather by Address** and **Model-Based Hourly Forecast by Address** (`dataset=weather`, `hours_ahead` 0 to 48): free lean response, $0.0002 per call for the full pull.
+- **Storm History by Address: Reported and Radar-Detected Events Since 2003** (`dataset=history`): $0.05 per event line, $10 minimum per report.
+- **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** (`dataset=storms`): $0.05 per address.
 
-## The actual economics
+## What you could build
 
-- Wholesale: $0.05/address, $25 minimum to start.
-- You control the markup. Sell a monthly subscription, a per-report fee, a SaaS tier -- your
-  call, this is just the data layer underneath whatever you charge for.
-- No contract, no minimum commitment, no enterprise sales call to get started.
-- Free previews (`addresses=false`) let you prototype and validate an idea before spending
-  anything.
+- A storm alert app that notifies owners or property managers when their address enters a forecast window (`dataset=risk`).
+- A property overlay for real estate sites using `structure_value` (replacement cost) and the forecast for any address.
+- A parametric quoting tool: address-level storm data as the data layer, you build the quoting layer.
+- A restoration or field-team tool: `dataset=storms` with `distance_mi` and severity for prioritizing addresses.
+- A Discord or Slack bot that pings a channel when a tracked address enters a forecast window.
+- An AI agent skill or MCP tool that other agents call through yours.
 
-## Real precedent this isn't hypothetical
+## The economics
 
-Small, fast-moving companies are already doing exactly this in the real market -- see
-[INDUSTRY_EVIDENCE.md](../INDUSTRY_EVIDENCE.md) for dated, sourced examples: Vortex Weather
-Insurance launched a real parametric hail product in March 2026, Renewable Guard built a real
-niche parametric product for solar farms, Understory built one specifically for auto dealer
-lots. None of these are massive companies -- they found a specific angle and built on top of
-address-level storm data.
+- Wholesale: $0.05 per address, $25 minimum prepaid top-up.
+- You set the markup. Subscription, per-report fee or SaaS tier, your call.
+- No contract, no sales call. Free previews (omit `addresses=true`) let you prototype before spending anything.
+
+See [INDUSTRY_EVIDENCE.md](../INDUSTRY_EVIDENCE.md) for dated examples of small companies building parametric and storm products on address-level data.
 
 ## Start here
 
-- [Code examples](../CODE_EXAMPLES.md) -- real curl/Python/JS to start pulling data today
-- [Sample data](../SAMPLE_DATA.md) -- see the actual response shape before you build anything
+- [Code examples](../CODE_EXAMPLES.md)
+- [Sample data](../SAMPLE_DATA.md)
 - Get a key: [atlasunited.io/api](https://atlasunited.io/api) or [truefixr.com/api](https://truefixr.com/api)
 
-None of this is a damage certification or a property inspection -- a reported or forecasted
-event is a signal worth following up on, not proof of loss.
+None of this is a damage certification or a property inspection. A reported or forecast event is a signal worth following up on, not proof of loss. Forecasts describe what could happen, not what will happen.

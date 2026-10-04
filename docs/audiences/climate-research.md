@@ -1,17 +1,10 @@
-# For Climate Research & Advocacy Organizations
+# For climate research and advocacy organizations
 
-See [SAMPLE_DATA.md](../SAMPLE_DATA.md) for real response examples.
+See [SAMPLE_DATA.md](../SAMPLE_DATA.md) for response shapes.
 
-- Continuous, real-time feed of reported severe weather events (hail, wind, flood) nationwide,
-  address-level, refreshed every 15 minutes -- a live ground-truth impact layer, not a model
-  output, useful as an input for tracking real-world frequency/severity trends over time.
-- Forecast layer (`dataset=risk`) adds a forward-looking view for research on exposure trends
-  as they develop, not just after-the-fact.
-- Address-level resolution means impact can be studied at the property/neighborhood level
-  instead of only county-wide aggregates.
-- This is event and exposure data, not a climate attribution model -- it tells you what was
-  reported or forecasted where, not why it's happening or how the climate is changing. Useful
-  as a real input dataset for that kind of research, not a substitute for it.
+- **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** and **Storm History by Address: Reported and Radar-Detected Events Since 2003** give dated, address-level records of reported and radar-detected events, an impact layer useful as an input for tracking frequency and severity trends.
+- **ML Storm Forecast by Address** adds a forward-looking view (24 hours to 10 days) of exposure as it develops, with structure replacement value and estimated people per address.
+- Address-level resolution means impact can be studied at property and neighborhood level, not only county aggregates.
+- This is event and exposure data, not a climate attribution model. It tells you what was reported or forecast where, not why.
 
-None of this is a damage certification or a property inspection -- a reported or forecasted
-event is a signal worth following up on, not proof of loss.
+None of this is a damage certification or a property inspection. A reported or forecast event is a signal worth following up on, not proof of loss. Forecasts describe what could happen, not what will happen.

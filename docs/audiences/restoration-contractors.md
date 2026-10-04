@@ -1,15 +1,9 @@
-# For Restoration & Contract Field Workers
+# For restoration, adjusters and field teams
 
-Restoration companies, claims response teams, independent adjusters, and contract crews
-doing field work after a storm. See [SAMPLE_DATA.md](../SAMPLE_DATA.md) for real response
-examples.
+Restoration companies, claims response teams, independent adjusters and field crews. See [SAMPLE_DATA.md](../SAMPLE_DATA.md) for response shapes.
 
-- `distance_mi` and `storm_subtype` on every `dataset=storms` lead show exactly how close a
-  reported event was to a specific address and what kind of event it was (radar-estimated
-  hail, reported wind event, etc.) -- for prioritizing which addresses to actually visit
-  first after a storm.
-- Address-level data means crews can be routed to the highest-severity addresses first,
-  instead of canvassing a whole neighborhood blind.
+- `distance_mi`, `severity` and `severity_unit` on every **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** record show how close a reported or radar-detected event was to an address and how strong it was, for deciding which addresses to look at first.
+- **Storm History by Address: Reported and Radar-Detected Events Since 2003** gives the longer record for one property, with a `date_of_loss` mode.
+- Address-level data means teams can be routed to the highest-severity addresses first.
 
-None of this is a damage certification or a property inspection -- a reported or forecasted
-event is a signal worth following up on, not proof of loss.
+None of this is a damage certification or a property inspection. A reported or forecast event is a signal worth following up on, not proof of loss. Forecasts describe what could happen, not what will happen.

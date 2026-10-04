@@ -1,175 +1,88 @@
 # Datasets
 
-One endpoint (`GET https://data.truefixr.com/v1/data`), one `dataset=` param per real
-data type below. Every dataset has a free preview (real counts, no account needed) and a
-paid full pull (`addresses=true`, requires an API key or an x402 payment). Two batch
-endpoints (separate POST routes) sit at the bottom for real portfolio use.
+One endpoint (`GET` or `POST https://data.truefixr.com/v1/data`), one `dataset=` parameter per data type. Every dataset has a free preview (counts and the exact price, no account) and a paid pull (`addresses=true`, or `details=true` for weather) that needs an API key or an x402 payment. Billing is per real returned record, never per request. Every paid response carries a `reference_id` receipt (format `TFX-YYYYMM-XXXXXXXX`).
 
-Call the endpoint with no params to get this same information back live, straight from
-the API - this file is a snapshot of it for browsing on GitHub.
+Call the endpoint with no params for the live version of this information.
 
-## storms - TrueFixR
+## The five canonical products
 
-Storms that already happened. Reported and radar-detected events near an address, up to
-365 days back.
+### 1. ML Storm Forecast by Address (`dataset=risk`)
 
-- Not a property inspection or damage assessment - it means a storm was detected here,
-  not what it did to any specific structure.
-- Example: `GET /v1/data?dataset=storms&county=Dallas&state=TX&peril=HAIL`
-- Free preview: real event counts, storm types, measured severity ranges, repeat-hit
-  addresses.
-- Paid: the real address-level event records. **$0.05/address.**
-- `min_severity=`/`max_severity=` filter by severity value. Some storm types (e.g.
-  `THUNDERSTORM_WIND`) carry severity in more than one real, incompatible unit - check
-  `severity_by_type` on a free preview first. If it shows `mixed_units:true`, add
-  `severity_unit=` (a key under `by_unit`, e.g. `pct` or `mph`) or filtering returns a
-  real 400 instead of a silently wrong blend.
+Probabilistic, address-level forecasts from per-peril machine-learning models across 10 perils: tornado, hail, wind, flash flood, heavy rain, winter, ice, coastal surge, hurricane and wildfire. 24 hours to 10 days ahead (`window`: `24h`, `48h`, `3d`, `5d`, `7d`, `10d`), refreshed 4 times a day.
 
-## risk - AtlasCast
+- Example: `GET /v1/data?dataset=risk&county=Dallas&state=TX&window=24h&addresses=true&limit=1`
+- You get: `structure_value` (USD replacement cost), `people` (estimated occupants), `full_address`, `city`, `state`, `zip`, `county`, `lat`, `lon`, `storm_type`, `forecast_time` (UTC), `risk_label`, `facility_name`, `facility_type`, `storm_hits`. Envelope: exposure totals, `value_basis`, `generated`, `data_age_hours`, `reference_id`.
+- Free preview: county, window, a county-level grade (teaser), `total_leads`, per-peril counts, `generated`, `data_age_hours`, `estimated_cost_usd`.
+- Price: **$0.05 per address.** `limit` defaults to 2000, max 5000. `peril=` narrows and lowers cost.
+- Not: a statement of what will happen, or a prediction of damage to any structure. The county grade is a whole-county label, not a property score.
 
-Storms that might happen. Forecast risk for future leads over the coming days,
-probabilistic, refreshed several times a day.
+### 2. Model-Based Weather by Address (`dataset=weather`)
 
-- Example: `GET /v1/data?dataset=risk&county=Dallas&state=TX`
-- Free preview: county risk grade, storm types forecast, total real leads in the window.
-- Paid: the real address-level forecast records. **$0.05/address.**
+Point-in-time conditions for any U.S. coordinate, with active severe weather alerts and a short-term rain outlook.
 
-## history - TrueFixR
+- Example: `GET /v1/data?dataset=weather&lat=31.07&lon=-97.65&details=true`
+- Free: the lean response (temperature, dewpoint, humidity, wind speed, gust and direction, precipitation and type, pressure, visibility, alerts, rain outlook). No account.
+- Paid: `details=true` for the full pull of over 170 variables (hail size, storm rotation, lightning, reflectivity, instability, cloud layers, radiation, winds and temperatures by level, soil, snow, vegetation). **$0.0002 per call.**
+- Not: a hazard or damage assessment.
 
-The deep archive. One property, every peril (hail, wind, flood, lightning, tornado),
-2003 to present, in a single report. Full report only - there's no hail-only or
-wind-only purchase.
+### 3. Model-Based Hourly Forecast by Address (`dataset=weather&hours_ahead=0-48`)
+
+The same dataset with `hours_ahead` (0 to 48) returns forecast hours instead of current conditions. The response reports `forecast_hour_used` and a `forecast_note`. Forecast hours carry about 40 core fields, fewer than current conditions.
+
+- Example: `GET /v1/data?dataset=weather&lat=31.07&lon=-97.65&details=true&hours_ahead=12`
+- Price: **$0.0002 per call.**
+
+### 4. Storm History by Address: Reported and Radar-Detected Events Since 2003 (`dataset=history`)
+
+One property's long record: every storm event reported or radar-detected within a chosen radius, 2003 to the present, across 11 categories (hail, wind, flood including heavy rain, lightning, tornado, hurricane and tropical, winter storm, extreme heat and cold, drought, wildfire, coastal and surf). Each line gives date, type, magnitude with units where measured, distance in miles and county. Significant thresholds are defined in the report: hail 0.75 inches, wind 50 mph, winter storm 6 inches.
 
 - Example: `GET /v1/data?dataset=history&address=891 Lake Hollow Blvd SW, Marietta, GA 30064&radius_mi=5`
-- Free preview: the real line count and total price before you pay anything.
-- Paid: the full real report, every matched event, by peril, with a reference ID.
-- `date_of_loss=YYYY-MM-DD` anchors the report around one specific date - real yes/no on
-  whether weather data supports a loss that day, plus real events immediately before and
-  after it. This IS the claims-evidence product: `date_of_loss=` plus `report_markdown`
-  (a formatted, citable report with a real `reference_id`) covers hail/wind/flood/
-  lightning/tornado evidence for a specific loss date. No separate endpoint needed.
-- **Pricing: $0.05/real report line, $10.00 minimum per report.**
+- Free preview: the line count and total price.
+- Paid: the full report with a citable `reference_id`.
+- `date_of_loss=YYYY-MM-DD` answers whether an event was reported or radar-detected near the address on that date, and lists events before and after it.
+- Price: **$0.05 per event line, $10 minimum per report.**
+- Not: a damage assessment. Not proof that a claim is supported or denied.
 
-## hazard_score - TrueFixR
+### 5. Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days (`dataset=storms`)
 
-One property's historical hazard profile, by peril - event frequency, most severe event,
-most recent event, years since last event. Same 2003-present archive as `history`, not a
-new data source - a scored/summarized cut of it.
+Address-level records of storm events reported or radar-detected at or near each address over the trailing 365 days, filterable by county, peril and severity. Sorted by severity, then recency.
 
-- Example: `GET /v1/data?dataset=hazard_score&address=891 Lake Hollow Blvd SW, Marietta, GA 30064`
-- Free preview: event counts per peril, no account needed.
-- Paid: most recent event date + years-since-last-event for every peril. Most severe
-  event size and significant-event counts only for perils that carry a real severity/
-  magnitude value (hail, wind) - flood/lightning/tornado are count-only, same real
-  limitation `history` already has for those perils (no comparable size measure exists in
-  the source data, not withheld).
-- **Pricing: $0.50/property, flat** - not per line like `history`.
+- Example: `GET /v1/data?dataset=storms&county=Dallas&state=TX&peril=HEAVY_RAIN&addresses=true&limit=1`
+- You get: `full_address`, `city`, `state`, `zip`, `county`, `lat`, `lon`, `storm_type`, `event_time`, `severity`, `severity_unit`, `distance_mi`, `storm_hits`. Envelope: `total_leads`, `returned`, `lead_cap`, `sorted_by`, `reference_id`.
+- Free preview: county, state, `total_leads`, per-type counts, `severity_by_type` (min, max, unit), `repeat_addresses`, `estimated_cost_usd`.
+- Severity units: some types carry severity in more than one unit. Check `severity_by_type` in the preview. If it shows `mixed_units`, add `severity_unit=` so filtering never blends units.
+- Price: **$0.05 per address.**
+- Not: a damage assessment, inspection or repair estimate.
 
-## address - TrueFixR + AtlasCast combined
+## Other datasets
 
-One property, one call: its own storm history plus that county's current forecast risk
-grade.
-
-- Example: `GET /v1/data?dataset=address&lat=32.78&lon=-79.93`
-- Free preview: counts and ranges for both the history side and the forecast side.
-- Paid: the real event records. Billed once per address regardless of event count.
-  **$0.05/address.**
-
-## coverage - always free
-
-Which states and counties actually have data on file. No paid tier - free-only, always.
-
-- Example: `GET /v1/data?dataset=coverage&state=TX`
-
-## weather
-
-Live point-in-time weather for any US coordinate: current conditions, hourly refresh,
-short-term rain outlook and active severe weather alerts.
-
-- Example: `GET /v1/data?dataset=weather&lat=31.07&lon=-97.65`
-- Free preview: the full 10-field lean response, no account needed - this one is free by
-  default.
-- Paid: `details=true` for the full current-conditions pull. Billed per real call, not per
-  address. **$0.0002/call.**
-- `hours_ahead=0-48` swaps in a forecast instead of current conditions - snaps
-  to the nearest real available forecast hour (not hourly-dense across the full range),
-  response's `forecast_hour_used` tells you exactly what you got. Forecast responses carry
-  fewer fields than current conditions.
-
-## facilities - AtlasCast
-
-Schools, hospitals, and other real facilities currently under an active risk window -
-not a static inventory, a facility only appears here while it's actually at risk.
-
-- Example: `GET /v1/data?dataset=facilities&county=Travis&state=TX`
-- Free preview: real counts only (total, returned=0), no facility records.
-- Paid: the real facility records - name, category, city/state, coordinates,
-  risk_label. **$0.05/facility.**
-
-## wildfire - AtlasCast
-
-County-level wildfire risk in the coming days.
-
-- Example: `GET /v1/data?dataset=wildfire&state=CA`
-- Free preview: real county count and risk summary, no per-county detail records.
-- Paid: the real per-county wildfire risk records. **$0.05/county.**
-
-## at_risk - AtlasCast
-
-Schools and businesses at risk, broken out by peril and forecast window, for future
-leads in the coming days.
-
-- Example: `GET /v1/data?dataset=at_risk&state=TX&kind=schools&peril=TORNADO`
-- Free preview: real totals per peril/window, no individual records.
-- Paid: the real matched school/business records. **$0.05/record.**
-
-## daily - AtlasCast, always free
-
-The daily merged leads digest across all counties - county-level aggregate only
-(counts, storm types, dollar exposure), no individual address records. Always free
-regardless of `addresses=` - no address-level tier for this one.
-
-- Example: `GET /v1/data?dataset=daily&rank=exposure_value_usd&limit=20`
-- `rank=exposure_value_usd` (or `exposure_people`, `new_leads`, `unique_addresses`)
-  returns the real top-N counties nationwide by that metric, flat and sorted, instead of
-  the full nested by-state blob (688KB unranked). `limit=` sets N, default 2000.
+| Dataset | What it is | Price |
+|---|---|---|
+| `address` | One property, one call: its own reported and radar-detected events over the last 365 days (about 150 m match), with the county forecast label as secondary context | $0.05 per address |
+| `hazard_score` | One property's historical hazard profile since 2003 by category: counts, most recent event, years since last event, most severe event for hail, wind and winter. A history summary, not a forecast | $0.50 per property, flat |
+| `facilities` | Schools, hospitals and other facilities inside the current forecast footprint, with peril, probability in percent, risk tier and lead days. County and state required | $0.05 per facility |
+| `wildfire` | **County-level** wildfire risk, one record per county at risk. Not address-level. A quiet period can return zero counties | $0.05 per county |
+| `at_risk` | Schools and businesses in the forecast footprint by peril and lead window (`0-1d`, `1-3d`, `3-7d`, `7-10d`) with probability and change since the last run | $0.05 per record |
+| `daily` | County-level daily digest of forecast exposure: counts, storm types, structure replacement cost, people. `rank=` returns the top N counties | Free |
+| `coverage` | Which states and counties have data on file | Free |
 
 ## How billing works
 
-The free preview is the default - no params needed, no account needed. Real counts and
-real price shown before you commit to anything. Most datasets unlock the paid pull with
-`addresses=true` (`history` uses the same flag) - requires either your own API key as a
-Bearer token, or an x402 crypto payment with no account at all. `coverage` and `daily`
-have no paid tier - free-only, always.
-
-## Risk scales
-
-Two separate real scales, not yet unified:
-
-- **1-5 numeric** (`risk_tiers`): 1 Low, 2 Moderate, 3 Elevated, 4 High, 5 Extreme.
-- **AtlasCast letter grade** (`grade`/`grade_label` on `dataset=risk` and
-  `POST /v1/portfolio/risk`): A (no/low risk) through F (extreme risk), 5 distinct grades
-  observed live.
+- Free preview is the default. Add `addresses=true` (weather: `details=true`) for the paid pull.
+- Two ways to pay at the same prices: a prepaid API key (`Authorization: Bearer KEY`, minimum top-up $25) or x402 pay-per-call in USDC on Base, no account.
+- Per real returned record, never per request. An identical paid query within 24 hours is not re-billed (`receipt_reused: true`).
+- `coverage`, `daily` and every free preview are always free.
 
 ## Batch endpoints
 
-Separate POST routes, not `dataset=` values on `/v1/data` - built for real portfolio use
-(many locations in one call). Your location list is sent fresh every call, never stored
-server-side.
+Separate POST routes. Your location list is sent fresh every call and never stored.
 
 ### `POST /v1/weather/batch`
 
-Current conditions + active severe weather alerts for every location in one call.
+Current conditions and active severe weather alerts for up to 500 locations. **$0.0002 per location.**
+Body: `{"locations": [{"lat": 30.27, "lon": -97.74, "label": "optional"}]}`
 
-- Max 500 locations per call.
-- Body: `{"locations": [{"lat": 30.27, "lon": -97.74, "label": "optional, your own reference"}]}`
-- **Pricing: $0.0002/location**, same rate as a single `dataset=weather` call.
+### `POST /v1/portfolio/risk`
 
-### `POST /v1/portfolio/risk` - AtlasCast
-
-Current AtlasCast forecast risk grade for every location in one call - a quick "which of
-my properties need attention" scan across a real portfolio.
-
-- Max 500 locations per call.
-- Body: `{"locations": [{"lat": 30.27, "lon": -97.74, "label": "optional"}], "window": "24h"}`
-- **Pricing: $0.05/location**, same rate as a single `dataset=risk` address pull.
+County forecast status for up to 500 locations: each point resolves to its county and returns the county's current forecast grade for the window. This is county-level status, a quick screen of which locations need attention, not an address-level forecast. For address-level records use ML Storm Forecast by Address. **$0.05 per location.**
+Body: `{"locations": [{"lat": 30.27, "lon": -97.74, "label": "optional"}], "window": "24h"}`

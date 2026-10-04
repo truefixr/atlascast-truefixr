@@ -1,9 +1,9 @@
 # Code examples
 
-Real, tested snippets against the live API. Replace `YOUR_API_KEY` with a real key from
+Snippets for the live API. Products: ML Storm Forecast by Address (`risk`), Model-Based Weather by Address (`weather`), Model-Based Hourly Forecast by Address (`weather` with `hours_ahead`), Storm History by Address (`history`) and Past Storm Leads by Address (`storms`). Replace `YOUR_API_KEY` with a real key from
 [atlasunited.io/api](https://atlasunited.io/api) or [truefixr.com/api](https://truefixr.com/api).
 
-## Free preview (no key needed)
+## Free preview (no key needed): Past Storm Leads by Address
 
 ### curl
 
@@ -33,7 +33,7 @@ const data = await res.json();
 console.log(data);
 ```
 
-## Address-level pull (requires payment)
+## Paid pull: Past Storm Leads by Address ($0.05 per address)
 
 ### curl
 
@@ -66,32 +66,50 @@ const data = await res.json();
 console.log(data);
 ```
 
-## Forecasted risk with real property values
+## ML Storm Forecast by Address ($0.05 per address)
+
+Each record carries `structure_value` (replacement cost, not market value) and `people`. Add `limit=10` for a 50 cent sample.
 
 ```bash
 curl "https://data.truefixr.com/v1/data?dataset=risk&state=TX&county=Harris&addresses=true&window=10d" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
+## Model-Based Hourly Forecast by Address ($0.0002 per call)
+
+```bash
+curl "https://data.truefixr.com/v1/data?dataset=weather&lat=31.07&lon=-97.65&details=true&hours_ahead=12" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Model-Based Weather by Address (current conditions) is the same call without `hours_ahead`. The lean response is free.
+
+## Storm History by Address ($0.05 per event line, $10 minimum)
+
+```bash
+curl "https://data.truefixr.com/v1/data?dataset=history&address=891+Lake+Hollow+Blvd+SW,+Marietta,+GA+30064&radius_mi=5"
+```
+
+The free preview returns the line count and exact price. Add `addresses=true` and your key for the full report.
+
 ## Autonomous AI agent payment (x402, no API key)
 
 ```python
-# Real flow, no account, no signup.
+# No account, no signup.
 import requests
 
 url = "https://data.truefixr.com/v1/data?dataset=storms&state=TX&county=Travis&addresses=true"
 r = requests.get(url)
 
 if r.status_code == 402:
-    payment_details = r.json()["for_ai_agents"]
-    # payment_details has: pay_to (Base network address), price_usd, network
-    # Construct and sign an x402 "exact" scheme payment payload for that amount,
-    # then retry with an X-Payment header:
-    # r = requests.get(url, headers={"X-Payment": signed_payload})
-    print(payment_details)
+    quote = r.json()  # accepts[]: scheme, network (eip155:8453), asset, amount, payTo
+    # Sign an "exact" scheme USDC payment on Base for that amount,
+    # then retry with a payment header:
+    # r = requests.get(url, headers={"X-PAYMENT": signed_payload})
+    print(quote)
 ```
 
-Full machine-readable payment manifest: [`/.well-known/x402`](https://data.truefixr.com/.well-known/x402)
+Full machine-readable payment manifest: [`/.well-known/x402.json`](https://data.truefixr.com/.well-known/x402.json)
 
 ## MCP (Claude, ChatGPT, other MCP clients)
 
