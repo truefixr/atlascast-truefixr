@@ -30,6 +30,4 @@ a marketing claim -- it's the actual result of checking every real alternative f
 
 - Not a damage certification or property inspection.
 - Not a climate attribution model.
-- Two of the ten peril models (FLASH_FLOOD, HEAVY_RAIN) have self-reported, not independently
-  reverified accuracy -- see [METHODOLOGY.md](METHODOLOGY.md).
 - `structure_value` is replacement cost, not market price.
