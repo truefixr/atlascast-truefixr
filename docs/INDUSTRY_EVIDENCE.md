@@ -10,7 +10,7 @@ not a claim, a list of things that actually happened, checked 2026-09-24.
   [Insurance Journal, 3/24/2026](https://www.insurancejournal.com/news/midwest/2026/03/24/863245.htm) ·
   [Yahoo Finance, 3/24/2026](https://finance.yahoo.com/sectors/technology/articles/vortex-weather-insurance-launches-direct-125600799.html)
 
-- **CoreLogic's hail-verification model** confirmed as the real trigger mechanism behind a
+- **CoreLogic's hail-verification model** identified as the real trigger mechanism behind a
   parametric hail product, cited in **Maryland state legislative testimony** -- address-level
   hail verification data is load-bearing enough to show up in state insurance regulatory
   hearings. [Maryland General Assembly testimony PDF](https://mgaleg.maryland.gov/cmte_testimony/2026/fin/1T87dF371H1KhlyifDHONNddBTVP1XuqR.pdf)
@@ -38,11 +38,6 @@ not a claim, a list of things that actually happened, checked 2026-09-24.
   makes that window achievable.
   [RoofPredict blog](https://roofpredict.com/blog/storm-response-workflow-alert-to-contract-in-72-hours)
 
-- **NOAA NCEI 2026 Industry Partnerships Summit**, **Sept 1-3, 2026** -- ~400 industry leaders,
-  panel titled *"The Future of Coverage: Weather Inputs to Parametric Insurance"*, with senior
-  catastrophe-research leadership from a top-10 US insurer in attendance.
-  [NOAA NCEI summit page](https://www.ncei.noaa.gov/2026-industry-partnerships-summit)
-
 - **Concirrus + Applied Underwriters -- SkyMiner**, announced **June 29, 2026**: an
   "insurance-native data and context layer" product, explicitly positioned against generic AI
   tools with "no model of insurance at all."
@@ -65,7 +60,7 @@ not a claim, a list of things that actually happened, checked 2026-09-24.
   [TDEM press release](https://tdem.texas.gov/press-release/3-31-26)
 
 - **LA County Office of Emergency Management** (**Sept 18, 2026**): actively testing
-  Non-Weather Emergency Message systems with NWS and broadcasters for National Preparedness
+  Non-Weather Emergency Message systems with weather services and broadcasters for National Preparedness
   Month. [LA County OEM](https://lacounty.gov/2026/09/18/office-of-emergency-management-encourages-residents-to-take-action-for-national-preparedness-month)
 
 ## Industry-level demand signals
@@ -97,7 +92,7 @@ not a claim, a list of things that actually happened, checked 2026-09-24.
   [FEMA](https://www.fema.gov/emergency-managers/practitioners/resilience-analysis-and-planning-tool)
 - **FEMA National Risk Index** -- baseline expected annual loss + social vulnerability,
   county/tract level, 18 hazards. [FEMA](https://www.fema.gov/about/reports-and-data)
-- **PlainHazard** -- combines FEMA disaster declarations (1953-2026) + NOAA Storm Events +
+- **PlainHazard** -- combines FEMA disaster declarations (1953-2026) + public storm records +
   FEMA NRI into county-level profiles -- the closest public analog to this API, but
   county-level and backward-looking/annualized rather than a rolling forward forecast.
 
