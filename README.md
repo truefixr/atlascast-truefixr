@@ -129,7 +129,7 @@ build your own model on top of them.
 - [Datasets](docs/DATASETS.md) -- every real dataset, full pricing, free-vs-paid, examples, plus both batch endpoints
 - [Sample data](docs/SAMPLE_DATA.md) -- real API responses, including real property values
 - [Who this is for](docs/WHO_IS_THIS_FOR.md) -- emergency management, insurance, MGA, reinsurance, restoration, research use cases
-- [Methodology](docs/METHODOLOGY.md) -- how risk gets attached to an address
+- [What you get](docs/METHODOLOGY.md) -- the two views of every address, and data honesty
 - [Comparison](docs/COMPARISON.md) -- how this compares to other real storm/risk data providers
 - [Code examples](docs/CODE_EXAMPLES.md) -- real curl/Python/JS snippets, plus x402 and MCP
 - [Industry evidence](docs/INDUSTRY_EVIDENCE.md) -- real, dated articles and launches proving this is a live industry need, not a guess
