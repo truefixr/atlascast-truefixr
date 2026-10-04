@@ -121,7 +121,7 @@ Not our primary audience, but the real per-property data holds up for that use t
 
 Same goes for weather prediction markets - `dataset=weather` gives detailed live
 conditions plus a 0-48h forecast, and `dataset=risk` covers real
-forecast storm risk out to 10 days. Both are raw inputs, not a packaged betting product —
+forecast storm risk out to 10 days. Both are raw inputs, not a packaged betting product -
 build your own model on top of them.
 
 ## Documentation
