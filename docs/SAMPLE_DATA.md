@@ -1,9 +1,9 @@
 # Sample data
 
 Real, live API responses, pulled directly from production on 2026-09-24. Nothing here is
-fabricated or illustrative — this is exactly what the API returns.
+fabricated or illustrative - this is exactly what the API returns.
 
-## 1. Reported storm events (TrueFixR) — free preview
+## 1. Reported storm events (TrueFixR) - free preview
 
 ```
 GET https://data.truefixr.com/v1/data?dataset=storms&state=TX&county=Travis
@@ -23,7 +23,7 @@ GET https://data.truefixr.com/v1/data?dataset=storms&state=TX&county=Travis
 }
 ```
 
-## 2. Reported storm events — address-level (paid)
+## 2. Reported storm events - address-level (paid)
 
 ```
 GET https://data.truefixr.com/v1/data?dataset=storms&state=TX&county=Travis&peril=HAIL&addresses=true
@@ -47,8 +47,8 @@ GET https://data.truefixr.com/v1/data?dataset=storms&state=TX&county=Travis&peri
 
 ## 3. Forecasted risk with real property values (AtlasCast)
 
-This is the layer that answers "how much is actually exposed" — real replacement-cost
-values per address, from the National Structure Inventory (NSI), joined to every address in
+This is the layer that answers "how much is actually exposed" - real replacement-cost
+values per address, joined to every address in
 the forecast footprint. Live example from Harris County, TX, active coastal surge forecast:
 
 ```
@@ -68,7 +68,7 @@ GET https://data.truefixr.com/v1/data?dataset=risk&state=TX&county=Harris&addres
   "residential_addresses": 2421196,
   "county_exposure_value_usd": 781057866542,
   "county_exposure_people": 4774217,
-  "value_basis": "NSI replacement cost of structure (not market value)",
+  "value_basis": "replacement cost of structure (not market value)",
   "matched_structure_value_usd": 90032249,
   "leads": [
     {
