@@ -1,6 +1,6 @@
 # Sample data
 
-Trimmed real responses from the live API (2026-10-04). Free previews need no key.
+Trimmed real responses from the live API (2026-10-04). Without a key, data requests return a price quote (HTTP 402).
 
 ## 1. ML Storm Forecast by Address (paid, `dataset=risk`)
 
@@ -106,9 +106,9 @@ GET https://data.truefixr.com/v1/data?dataset=hazard_score&address=891 Lake Holl
 }
 ```
 
-The full report is `dataset=history`, $0.05 per event line with a $10 minimum. Hazard score is $0.50 per property, flat.
+The full report is `dataset=history`, $0.05 per event line, no minimum. Hazard score is $0.50 per property, flat.
 
-## 5. Free daily digest (`dataset=daily`)
+## 5. Daily digest (`dataset=daily`, $0.02 per county)
 
 ```
 GET https://data.truefixr.com/v1/data?dataset=daily&rank=exposure_value_usd&limit=1

@@ -1,6 +1,6 @@
 # Datasets
 
-One endpoint (`GET` or `POST https://data.truefixr.com/v1/data`), one `dataset=` parameter per data type. Every dataset has a free preview (counts and the exact price, no account) and a paid pull (`addresses=true`, or `details=true` for weather) that needs an API key or an x402 payment. Billing is per real returned record, never per request. Every paid response carries a `reference_id` receipt (format `TFX-YYYYMM-XXXXXXXX`).
+One endpoint (`GET` or `POST https://data.truefixr.com/v1/data`), one `dataset=` parameter per data type. Every request without payment gets the exact price first (HTTP 402 quote: count, price and a card pay link) and a paid pull (`addresses=true`, or `details=true` for weather) that needs an API key or an x402 payment. Billing is per real returned record, never per request. Every paid response carries a `reference_id` receipt (format `TFX-YYYYMM-XXXXXXXX`).
 
 Call the endpoint with no params for the live version of this information.
 
@@ -12,7 +12,7 @@ Probabilistic, address-level forecasts from per-peril machine-learning models ac
 
 - Example: `GET /v1/data?dataset=risk&county=Dallas&state=TX&window=24h&addresses=true&limit=1`
 - You get: `structure_value` (USD replacement cost), `people` (estimated occupants), `full_address`, `city`, `state`, `zip`, `county`, `lat`, `lon`, `storm_type`, `forecast_time` (UTC), `risk_label`, `facility_name`, `facility_type`, `storm_hits`. Envelope: exposure totals, `value_basis`, `generated`, `data_age_hours`, `reference_id`.
-- Free preview: county, window, a county-level grade (teaser), `total_leads`, per-peril counts, `generated`, `data_age_hours`, `estimated_cost_usd`.
+- Price quote (HTTP 402): `total_leads` and `estimated_cost_usd`. County grade and per-peril counts are a County Summary (`summary=true`, $0.02 per county).
 - Price: **$0.05 per address.** `limit` defaults to 2000, max 5000. `peril=` narrows and lowers cost.
 - Not: a statement of what will happen, or a prediction of damage to any structure. The county grade is a whole-county label, not a property score.
 
@@ -21,7 +21,7 @@ Probabilistic, address-level forecasts from per-peril machine-learning models ac
 Point-in-time conditions for any U.S. coordinate, with active severe weather alerts and a short-term rain outlook.
 
 - Example: `GET /v1/data?dataset=weather&lat=31.07&lon=-97.65&details=true`
-- Free: the lean response (temperature, dewpoint, humidity, wind speed, gust and direction, precipitation and type, pressure, visibility, alerts, rain outlook). No account.
+- Lean response (temperature, dewpoint, humidity, wind speed, gust and direction, precipitation and type, pressure, visibility, alerts, rain outlook): $0.0002 per call.
 - Paid: `details=true` for the full pull of over 170 variables (hail size, storm rotation, lightning, reflectivity, instability, cloud layers, radiation, winds and temperatures by level, soil, snow, vegetation). **$0.0002 per call.**
 - Not: a hazard or damage assessment.
 
@@ -37,10 +37,10 @@ The same dataset with `hours_ahead` (0 to 48) returns forecast hours instead of 
 One property's long record: every storm event reported or radar-detected within a chosen radius, 2003 to the present, across 11 categories (hail, wind, flood including heavy rain, lightning, tornado, hurricane and tropical, winter storm, extreme heat and cold, drought, wildfire, coastal and surf). Each line gives date, type, magnitude with units where measured, distance in miles and county. Significant thresholds are defined in the report: hail 0.75 inches, wind 50 mph, winter storm 6 inches.
 
 - Example: `GET /v1/data?dataset=history&address=891 Lake Hollow Blvd SW, Marietta, GA 30064&radius_mi=5`
-- Free preview: the line count and total price.
+- Price quote (HTTP 402): the line count and total price. Filters: `radius_mi`, `start`/`end` or `years`, `perils`, `max_lines` or `max_usd`.
 - Paid: the full report with a citable `reference_id`.
 - `date_of_loss=YYYY-MM-DD` answers whether an event was reported or radar-detected near the address on that date, and lists events before and after it.
-- Price: **$0.05 per event line, $10 minimum per report.**
+- Price: **$0.05 per event line, no minimum.**
 - Not: a damage assessment. Not proof that a claim is supported or denied.
 
 ### 5. Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days (`dataset=storms`)
@@ -49,7 +49,7 @@ Address-level records of storm events reported or radar-detected at or near each
 
 - Example: `GET /v1/data?dataset=storms&county=Dallas&state=TX&peril=HEAVY_RAIN&addresses=true&limit=1`
 - You get: `full_address`, `city`, `state`, `zip`, `county`, `lat`, `lon`, `storm_type`, `event_time`, `severity`, `severity_unit`, `distance_mi`, `storm_hits`. Envelope: `total_leads`, `returned`, `lead_cap`, `sorted_by`, `reference_id`.
-- Free preview: county, state, `total_leads`, per-type counts, `severity_by_type` (min, max, unit), `repeat_addresses`, `estimated_cost_usd`.
+- Price quote (HTTP 402): `total_leads` and `estimated_cost_usd`. Per-type counts are in the County Summary (`summary=true`, $0.02 per county).
 - Severity units: some types carry severity in more than one unit. Check `severity_by_type` in the preview. If it shows `mixed_units`, add `severity_unit=` so filtering never blends units.
 - Price: **$0.05 per address.**
 - Not: a damage assessment, inspection or repair estimate.
@@ -63,15 +63,16 @@ Address-level records of storm events reported or radar-detected at or near each
 | `facilities` | Schools, hospitals and other facilities inside the current forecast footprint, with peril, probability in percent, risk tier and lead days. County and state required | $0.05 per facility |
 | `wildfire` | **County-level** wildfire risk, one record per county at risk. Not address-level. A quiet period can return zero counties | $0.05 per county |
 | `at_risk` | Schools and businesses in the forecast footprint by peril and lead window (`0-1d`, `1-3d`, `3-7d`, `7-10d`) with probability and change since the last run | $0.05 per record |
-| `daily` | County-level daily digest of forecast exposure: counts, storm types, structure replacement cost, people. `rank=` returns the top N counties | Free |
-| `coverage` | Which states and counties have data on file | Free |
+| `daily` | County-level daily digest of forecast exposure: counts, storm types, structure replacement cost, people. `rank=` returns the top N counties | $0.02 per county |
+| `coverage` | Which states and counties have data on file | $0.0002 per call |
 
 ## How billing works
 
-- Free preview is the default. Add `addresses=true` (weather: `details=true`) for the paid pull.
-- Two ways to pay at the same prices: a prepaid API key (`Authorization: Bearer KEY`, minimum top-up $25) or x402 pay-per-call in USDC on Base, no account.
+- Without payment you get the price quote (HTTP 402). Add `addresses=true` (weather: `details=true`) for the paid pull.
+- Two ways to pay at the same prices: a prepaid API key (`Authorization: Bearer KEY`, top-up from $1) or x402 pay-per-call in USDC on Base, no account.
 - Per real returned record, never per request. An identical paid query within 24 hours is not re-billed (`receipt_reused: true`).
-- `coverage`, `daily` and every free preview are always free.
+- Free: the menu (`GET /v1/data` with no params) and the price quote. Card payments under $0.50 are charged $0.50; x402 pays the exact amount.
+- License: for your own use. No resale, redistribution or AI training; bulk, archive and training rights are licensed separately ([terms](https://atlasunited.io/terms)).
 
 ## Batch endpoints
 

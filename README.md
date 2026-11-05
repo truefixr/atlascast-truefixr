@@ -9,9 +9,9 @@ AtlasCast is Atlas United's forecasting model suite: probabilistic, address-leve
 | # | Product | `dataset=` | Price |
 |---|---|---|---|
 | 1 | **ML Storm Forecast by Address** | `risk` | $0.05 per address |
-| 2 | **Model-Based Weather by Address** | `weather` | Lean response free, $0.0002 per call with `details=true` |
+| 2 | **Model-Based Weather by Address** | `weather` | $0.0002 per call |
 | 3 | **Model-Based Hourly Forecast by Address** | `weather` with `hours_ahead` (0 to 48) | $0.0002 per call |
-| 4 | **Storm History by Address: Reported and Radar-Detected Events Since 2003** | `history` | $0.05 per event line, $10 minimum per report |
+| 4 | **Storm History by Address: Reported and Radar-Detected Events Since 2003** | `history` | $0.05 per event line, no minimum |
 | 5 | **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** | `storms` | $0.05 per address |
 
 Products 1 to 3 are model outputs. Products 4 and 5 are recorded events matched to addresses.
@@ -20,11 +20,11 @@ Products 1 to 3 are model outputs. Products 4 and 5 are recorded events matched 
 
 Probabilistic, address-level forecasts for 10 perils (tornado, hail, wind, flash flood, heavy rain, winter, ice, coastal surge, hurricane and wildfire), 24 hours to 10 days ahead, refreshed 4 times a day. AtlasCast uses a separate machine-learning model for each peril. Models are trained and validated chronologically on held-out reported events, and inputs are restricted to information available at forecast issue time.
 
-Each address record carries the structure replacement value and the estimated people at that address, plus storm type, forecast time, a risk label and a past-hit count. Replacement value is the cost to rebuild the structure, not market value. Windows: `24h`, `48h`, `3d`, `5d`, `7d`, `10d`. Filter by county, peril and window. A free preview shows counts, per-peril totals, a county-level grade as a teaser, and the exact cost first. Forecasts describe what could happen, not what will happen.
+Each address record carries the structure replacement value and the estimated people at that address, plus storm type, forecast time, a risk label and a past-hit count. Replacement value is the cost to rebuild the structure, not market value. Windows: `24h`, `48h`, `3d`, `5d`, `7d`, `10d`. Filter by county, peril and window. Without payment you get the address count and exact price first; county grade and per-peril totals are a County Summary ($0.02 per county). Forecasts describe what could happen, not what will happen.
 
 ### 2. Model-Based Weather by Address
 
-Point weather for any U.S. coordinate: current conditions, active severe weather alerts and a short-term rain outlook. The lean response is free with no account. Add `details=true` for the full pull of over 170 variables at $0.0002 per call.
+Point weather for any U.S. coordinate: current conditions, active severe weather alerts and a short-term rain outlook. $0.0002 per call. Add `details=true` for the full pull of over 170 variables at $0.0002 per call.
 
 ### 3. Model-Based Hourly Forecast by Address
 
@@ -36,17 +36,17 @@ One property's long record: every storm event reported or radar-detected within 
 
 ### 5. Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days
 
-Address-level records of storm events reported or radar-detected at or near each address over the trailing 365 days, filterable by county, peril and severity. Each record has the event time (UTC), type, measured or radar-estimated severity with its unit, distance and a repeat-hit count. A free preview shows counts, severity ranges and the exact cost. Not a damage assessment.
+Address-level records of storm events reported or radar-detected at or near each address over the trailing 365 days, filterable by county, peril and severity. Each record has the event time (UTC), type, measured or radar-estimated severity with its unit, distance and a repeat-hit count. Without payment you get the address count and exact price first. Not a damage assessment.
 
 ## Access
 
 | Method | Best for |
 |---|---|
-| [REST API](https://atlasunited.io/api) | Prepaid API key (from $25), `Authorization: Bearer <key>` |
+| [REST API](https://atlasunited.io/api) | Prepaid API key (top up from $1), `Authorization: Bearer <key>` |
 | [MCP server](https://mcp.atlasunited.io/mcp) | Claude, ChatGPT and other MCP-compatible AI clients |
 | [x402](https://data.truefixr.com/.well-known/x402.json) | Autonomous AI agents: pay per request in USDC on Base, no account |
 
-Same prices either way. Every dataset has a free preview that shows counts and the exact price before you pay. Every paid response carries a `reference_id` receipt, and an identical paid query within 24 hours is not billed twice.
+Same prices either way. Every request without payment returns the exact price first (HTTP 402 quote with the count, the price and a card pay link). Every paid response carries a `reference_id` receipt, and an identical paid query within 24 hours is not billed twice.
 
 ## Endpoint
 
@@ -62,7 +62,7 @@ POST https://data.truefixr.com/v1/data   (same params as a JSON body, keeps addr
 | `peril` | Narrow by peril, for example `HAIL`, `FLASH_FLOOD`, `HEAVY_RAIN`, `TORNADO` |
 | `window` | `risk` only: `24h`, `48h`, `3d`, `5d`, `7d`, `10d` |
 | `hours_ahead` | `weather` only: 0 to 48 |
-| `addresses` | Omit for the free preview. `true` for the paid pull (`weather` uses `details=true`) |
+| `addresses` | Omit for the price quote (HTTP 402). `true` for the paid pull (`weather` uses `details=true`) |
 | `limit` | Max records returned (`limit=10` on a $0.05 dataset is a 50 cent sample) |
 | `format` | `json` or `csv` |
 
@@ -99,7 +99,7 @@ Insurers, adjusters, emergency management, property managers, restoration, solar
 
 ## Documentation
 
-- [Datasets](docs/DATASETS.md): every dataset, price, free preview and example
+- [Datasets](docs/DATASETS.md): every dataset, price and example
 - [Sample data](docs/SAMPLE_DATA.md): trimmed real responses
 - [Who this is for](docs/WHO_IS_THIS_FOR.md): use cases by audience
 - [What you get](docs/METHODOLOGY.md): the two views of every address, and data honesty
@@ -109,6 +109,6 @@ Insurers, adjusters, emergency management, property managers, restoration, solar
 
 ## Links
 
-- API docs and signup: https://atlasunited.io/api and https://truefixr.com/api
+- API docs and signup: https://atlasunited.io/api
 - MCP server: https://mcp.atlasunited.io/mcp
 - Company: https://truefixr.com

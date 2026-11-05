@@ -5,8 +5,8 @@ Address-level data, cheap enough ($0.05 per address) to build a product on top o
 ## Products you can call
 
 - **ML Storm Forecast by Address** (`dataset=risk`): forecasts for 10 perils, 24 hours to 10 days, with structure replacement value and estimated people on every address record.
-- **Model-Based Weather by Address** and **Model-Based Hourly Forecast by Address** (`dataset=weather`, `hours_ahead` 0 to 48): free lean response, $0.0002 per call for the full pull.
-- **Storm History by Address: Reported and Radar-Detected Events Since 2003** (`dataset=history`): $0.05 per event line, $10 minimum per report.
+- **Model-Based Weather by Address** and **Model-Based Hourly Forecast by Address** (`dataset=weather`, `hours_ahead` 0 to 48): $0.0002 per call for the full pull.
+- **Storm History by Address: Reported and Radar-Detected Events Since 2003** (`dataset=history`): $0.05 per event line, no minimum.
 - **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** (`dataset=storms`): $0.05 per address.
 
 ## What you could build
@@ -20,9 +20,9 @@ Address-level data, cheap enough ($0.05 per address) to build a product on top o
 
 ## The economics
 
-- Wholesale: $0.05 per address, $25 minimum prepaid top-up.
+- Wholesale: $0.05 per address, prepaid top-up from $1.
 - You set the markup. Subscription, per-report fee or SaaS tier, your call.
-- No contract, no sales call. Free previews (omit `addresses=true`) let you prototype before spending anything.
+- No contract, no sales call. Every call shows its exact price first (omit `addresses=true`), and `limit=10` is a 50 cent sample.
 
 See [INDUSTRY_EVIDENCE.md](../INDUSTRY_EVIDENCE.md) for dated examples of small companies building parametric and storm products on address-level data.
 
@@ -30,6 +30,6 @@ See [INDUSTRY_EVIDENCE.md](../INDUSTRY_EVIDENCE.md) for dated examples of small 
 
 - [Code examples](../CODE_EXAMPLES.md)
 - [Sample data](../SAMPLE_DATA.md)
-- Get a key: [atlasunited.io/api](https://atlasunited.io/api) or [truefixr.com/api](https://truefixr.com/api)
+- Get a key: [atlasunited.io/api](https://atlasunited.io/api)
 
 None of this is a damage certification or a property inspection. A reported or forecast event is a signal worth following up on, not proof of loss. Forecasts describe what could happen, not what will happen.

@@ -1,9 +1,9 @@
 # Code examples
 
 Snippets for the live API. Products: ML Storm Forecast by Address (`risk`), Model-Based Weather by Address (`weather`), Model-Based Hourly Forecast by Address (`weather` with `hours_ahead`), Storm History by Address (`history`) and Past Storm Leads by Address (`storms`). Replace `YOUR_API_KEY` with a real key from
-[atlasunited.io/api](https://atlasunited.io/api) or [truefixr.com/api](https://truefixr.com/api).
+[atlasunited.io/api](https://atlasunited.io/api).
 
-## Free preview (no key needed): Past Storm Leads by Address
+## Price quote (no key needed, HTTP 402): Past Storm Leads by Address
 
 ### curl
 
@@ -82,15 +82,15 @@ curl "https://data.truefixr.com/v1/data?dataset=weather&lat=31.07&lon=-97.65&det
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-Model-Based Weather by Address (current conditions) is the same call without `hours_ahead`. The lean response is free.
+Model-Based Weather by Address (current conditions) is the same call without `hours_ahead`. The lean response is $0.0002 per call.
 
-## Storm History by Address ($0.05 per event line, $10 minimum)
+## Storm History by Address ($0.05 per event line, no minimum)
 
 ```bash
 curl "https://data.truefixr.com/v1/data?dataset=history&address=891+Lake+Hollow+Blvd+SW,+Marietta,+GA+30064&radius_mi=5"
 ```
 
-The free preview returns the line count and exact price. Add `addresses=true` and your key for the full report.
+Without a key you get the line count and exact price (HTTP 402). Add `addresses=true` and your key for the full report.
 
 ## Autonomous AI agent payment (x402, no API key)
 
