@@ -1,30 +1,25 @@
 # For developers: build your own app or product on this data
 
-Address-level data, cheap enough ($0.05 per address) to build a product on top of.
+Address-level data, priced per call ($0.05 per address), for your software or your AI agent.
 
-## Products you can call
+## Datasets you can call
 
-- **ML Storm Forecast by Address** (`dataset=risk`): forecasts for 10 perils, 24 hours to 10 days, with structure replacement value and estimated people on every address record.
-- **Model-Based Weather by Address** and **Model-Based Hourly Forecast by Address** (`dataset=weather`, `hours_ahead` 0 to 48): $0.0002 per call for the full pull.
-- **Storm History by Address: Reported and Radar-Detected Events Since 2003** (`dataset=history`): $0.05 per event line, no minimum.
-- **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** (`dataset=storms`): $0.05 per address.
+- **AtlasCast address forecast** (`dataset=risk`): a ranked list of the addresses in a storm's forecast path, for 10 perils (wildfire by county), 24 hours to 10 days. $0.05 per address.
+- **Point weather** (`dataset=weather`, with `hours_ahead` 0 to 48 for forecast hours): $0.0002 per call.
+- **Storm history near an address** (`dataset=history`): $0.05 per report line, no minimum.
+- **Recent storms near addresses** (`dataset=storms`): $0.05 per address.
 
 ## What you could build
 
 - A storm alert app that notifies owners or property managers when their address enters a forecast window (`dataset=risk`).
-- A property overlay for real estate sites using `structure_value` (replacement cost) and the forecast for any address.
-- A parametric quoting tool: address-level storm data as the data layer, you build the quoting layer.
-- A restoration or field-team tool: `dataset=storms` with `distance_mi` and severity for prioritizing addresses.
 - A Discord or Slack bot that pings a channel when a tracked address enters a forecast window.
 - An AI agent skill or MCP tool that other agents call through yours.
 
 ## The economics
 
-- Wholesale: $0.05 per address, prepaid top-up from $1.
-- You set the markup. Subscription, per-report fee or SaaS tier, your call.
-- No contract, no sales call. Every call shows its exact price first (omit `addresses=true`), and `limit=10` is a 50 cent sample.
-
-See [INDUSTRY_EVIDENCE.md](../INDUSTRY_EVIDENCE.md) for dated examples of small companies building parametric and storm products on address-level data.
+- Pay per call: $0.05 per address or report line, with a prepaid API key, by card, or with x402.
+- No contract, no sales call. Every data call shows its exact price first (omit `addresses=true`), and `limit=10` is a 50 cent sample.
+- The data is licensed for your own use. Resale, redistribution and AI training need a separate license ([terms](https://atlasunited.io/terms)).
 
 ## Start here
 

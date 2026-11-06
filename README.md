@@ -1,114 +1,37 @@
-# Atlas United storm data API: ML forecasts and storm history for every U.S. address
+# Atlas United API: AtlasCast U.S. Storm Forecasts & Storm History Since 2003
 
-Atlas United builds risk models for every U.S. address (latitude/longitude), with all the information inside each location. This repository documents the API: address-level storm forecasts for the next 24 hours to 10 days, plus every reported storm at that address back to 2003. Pay per address, no contract.
+Before a storm arrives, someone has to decide what to bind, who to warn and where to send crews. Atlas United shows which U.S. addresses are in a storm's forecast path, up to ten days ahead. It grades each county A to F and ranks the addresses across ten perils, refreshed four times a day, built on AEPM, our patent-pending hazard model. The same API returns the storm record near a U.S. address back to 2003.
 
-AtlasCast is Atlas United's forecasting model suite: probabilistic, address-level forecasts for 10 perils, refreshed 4 times a day. TrueFixR is the storm-data side: reported and radar-detected storm history by address. Not affiliated with NOAA or the NWS.
+## Datasets & Pricing
 
-## The five products
+- **Menu (free, HTTP 200):** `GET https://data.truefixr.com/v1/data`
+- **Price quote (free, HTTP 402):** Call a dataset without credentials to receive the exact record count, exact USD price, a Stripe card link ($0.50 processor minimum), and x402 payment parameters (USDC on Base).
+- **Prepaid API key:** Get a key at https://atlasunited.io/api and pass `Authorization: Bearer <key>`.
+- **Remote MCP server:** `https://mcp.atlasunited.io/mcp`
 
-| # | Product | `dataset=` | Price |
+| Dataset | Parameter / Route | What Returns | Price |
 |---|---|---|---|
-| 1 | **ML Storm Forecast by Address** | `risk` | $0.05 per address |
-| 2 | **Model-Based Weather by Address** | `weather` | $0.0002 per call |
-| 3 | **Model-Based Hourly Forecast by Address** | `weather` with `hours_ahead` (0 to 48) | $0.0002 per call |
-| 4 | **Storm History by Address: Reported and Radar-Detected Events Since 2003** | `history` | $0.05 per event line, no minimum |
-| 5 | **Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days** | `storms` | $0.05 per address |
-
-Products 1 to 3 are model outputs. Products 4 and 5 are recorded events matched to addresses.
-
-### 1. ML Storm Forecast by Address
-
-Probabilistic, address-level forecasts for 10 perils (tornado, hail, wind, flash flood, heavy rain, winter, ice, coastal surge, hurricane and wildfire), 24 hours to 10 days ahead, refreshed 4 times a day. AtlasCast uses a separate machine-learning model for each peril. Models are trained and validated chronologically on held-out reported events, and inputs are restricted to information available at forecast issue time.
-
-Each address record carries the structure replacement value and the estimated people at that address, plus storm type, forecast time, a risk label and a past-hit count. Replacement value is the cost to rebuild the structure, not market value. Windows: `24h`, `48h`, `3d`, `5d`, `7d`, `10d`. Filter by county, peril and window. Without payment you get the address count and exact price first; county grade and per-peril totals are a County Summary ($0.02 per county). Forecasts describe what could happen, not what will happen.
-
-### 2. Model-Based Weather by Address
-
-Point weather for any U.S. coordinate: current conditions, active severe weather alerts and a short-term rain outlook. $0.0002 per call. Add `details=true` for the full pull of over 170 variables at $0.0002 per call.
-
-### 3. Model-Based Hourly Forecast by Address
-
-Add `hours_ahead` (0 to 48) to the weather dataset for forecast hours instead of current conditions. The response reports the hour actually used in `forecast_hour_used`. Forecast hours carry a smaller core set of fields. $0.0002 per call.
-
-### 4. Storm History by Address: Reported and Radar-Detected Events Since 2003
-
-One property's long record: every storm event reported or radar-detected within a chosen radius, 2003 to the present, across 11 categories (hail, wind, flood, lightning, tornado, hurricane, winter storm, extreme heat and cold, drought, wildfire, coastal). Each line has event date, type, magnitude where measured, distance in miles and county. Citable, with a `reference_id`. An optional `date_of_loss` mode shows whether an event was reported or radar-detected near the address on a date, and lists events before and after it. A record of reported and radar-detected events, not a damage assessment.
-
-### 5. Past Storm Leads by Address: Reported and Radar-Detected, Last 365 Days
-
-Address-level records of storm events reported or radar-detected at or near each address over the trailing 365 days, filterable by county, peril and severity. Each record has the event time (UTC), type, measured or radar-estimated severity with its unit, distance and a repeat-hit count. Without payment you get the address count and exact price first. Not a damage assessment.
-
-## Access
-
-| Method | Best for |
-|---|---|
-| [REST API](https://atlasunited.io/api) | Prepaid API key (top up from $1), `Authorization: Bearer <key>` |
-| [MCP server](https://mcp.atlasunited.io/mcp) | Claude, ChatGPT and other MCP-compatible AI clients |
-| [x402](https://data.truefixr.com/.well-known/x402.json) | Autonomous AI agents: pay per request in USDC on Base, no account |
-
-Same prices either way. Every request without payment returns the exact price first (HTTP 402 quote with the count, the price and a card pay link). Every paid response carries a `reference_id` receipt, and an identical paid query within 24 hours is not billed twice.
-
-## Endpoint
-
-```
-GET  https://data.truefixr.com/v1/data
-POST https://data.truefixr.com/v1/data   (same params as a JSON body, keeps addresses out of URLs)
-```
-
-| Param | Description |
-|---|---|
-| `dataset` | `risk`, `weather`, `history`, `storms`, plus `address`, `hazard_score`, `facilities`, `wildfire` (county-level), `at_risk`, `daily`, `coverage` |
-| `state` / `county` | 2-letter state code / county name |
-| `peril` | Narrow by peril, for example `HAIL`, `FLASH_FLOOD`, `HEAVY_RAIN`, `TORNADO` |
-| `window` | `risk` only: `24h`, `48h`, `3d`, `5d`, `7d`, `10d` |
-| `hours_ahead` | `weather` only: 0 to 48 |
-| `addresses` | Omit for the price quote (HTTP 402). `true` for the paid pull (`weather` uses `details=true`) |
-| `limit` | Max records returned (`limit=10` on a $0.05 dataset is a 50 cent sample) |
-| `format` | `json` or `csv` |
-
-Call the endpoint with no params for the live machine-readable menu. Full detail per dataset: [Datasets](docs/DATASETS.md).
-
-## Batch endpoints
-
-| Endpoint | Max locations | Price |
-|---|---|---|
-| `POST /v1/weather/batch` | 500 | $0.0002 per location |
-| `POST /v1/portfolio/risk` | 500 | $0.05 per location (county forecast status, not address-level) |
-
-## For AI agents
-
-An agent with no API key and no human in the loop can pay per call with x402:
-
-1. Request a paid pull, for example `GET https://data.truefixr.com/v1/data?dataset=storms&county=Dallas&state=TX&addresses=true&limit=1`.
-2. Receive HTTP 402 with the exact price.
-3. Sign a USDC payment on Base (`eip155:8453`) and retry with the payment header.
-4. Receive the data. No signup, no key.
-
-Manifest: [`/.well-known/x402.json`](https://data.truefixr.com/.well-known/x402.json). Agent docs: [`llms.txt`](https://data.truefixr.com/llms.txt).
-
-## Data honesty
-
-- Forecasts describe what could happen, not what will happen.
-- A storm reported or radar-detected near an address is not a property inspection, damage assessment or repair estimate.
-- `structure_value` is replacement cost (what it costs to rebuild), not market value.
-- Not affiliated with NOAA or the NWS.
-
-## Who this is for
-
-Insurers, adjusters, emergency management, property managers, restoration, solar, and data and AI-agent builders.
+| **AtlasCast County Summary** | `dataset=risk&summary=true` | County A-to-F forecast grade and peril counts (24h to 10d) | `$0.02` per county |
+| **AtlasCast Address Forecast** | `dataset=risk` | Ranked U.S. addresses in a storm's forecast path (24h to 10d, ten perils; county list capped) | `$0.05` per address |
+| **Portfolio Risk Check** | `POST /v1/portfolio/risk` | Up to 500 U.S. coordinates per call, each with the A-to-F grade of the county it sits in | `$0.05` per location |
+| **Schools & Businesses in Path** | `dataset=at_risk` | Schools or businesses inside the forecast path (`kind=schools` or `businesses`) | `$0.05` per location |
+| **Storm History Near an Address** | `dataset=history` | Storm events near a U.S. address back to 2003, with an optional `date_of_loss` check | `$0.05` per report line, no minimum |
+| **Storm History Summary** | `dataset=hazard_score` | Summary by event category of the storm history near one U.S. property since 2003 | `$0.50` per property |
+| **Facilities in the Forecast Path** | `dataset=facilities` | Facilities inside an active forecast window | `$0.05` per record |
+| **Wildfire Risk by County** | `dataset=wildfire` | Counties at wildfire risk in the coming days (county-level) | `$0.05` per county |
+| **Daily Forecast Digest** | `dataset=daily` | County-level digest of the day's forecast | `$0.02` per county |
+| **365-Day Storm Records** | `dataset=storms` / `dataset=address` | Addresses where storms were reported or radar-detected nearby in the last 365 days | `$0.05` per address |
+| **Continental U.S. Weather (0 to 48h)** | `dataset=weather` | Point weather and active NWS alerts (`hours_ahead=0..48`, continental U.S. only) | `$0.0002` per call |
 
 ## Documentation
 
-- [Datasets](docs/DATASETS.md): every dataset, price and example
-- [Sample data](docs/SAMPLE_DATA.md): trimmed real responses
-- [Who this is for](docs/WHO_IS_THIS_FOR.md): use cases by audience
-- [What you get](docs/METHODOLOGY.md): the two views of every address, and data honesty
-- [Comparison](docs/COMPARISON.md)
-- [Code examples](docs/CODE_EXAMPLES.md): curl, Python, JavaScript, x402 and MCP
-- [Industry evidence](docs/INDUSTRY_EVIDENCE.md)
+- [Datasets](docs/DATASETS.md): every dataset, its parameters and its price.
+- [Sample data](docs/SAMPLE_DATA.md): real price quotes and example records.
+- [Code examples](docs/CODE_EXAMPLES.md): curl, Python, x402 and MCP.
+- [Who is this for](docs/WHO_IS_THIS_FOR.md): the audiences, one page each.
 
-## Links
+## Disclaimers & License
 
-- API docs and signup: https://atlasunited.io/api
-- MCP server: https://mcp.atlasunited.io/mcp
-- Company: https://truefixr.com
+Forecasts show what could happen, not what will. Storm reports show where a storm was reported or radar-detected near an address, not a damage assessment. Hurricane historical coverage is partial, and wildfire is county-level. Not affiliated with NOAA or the National Weather Service.
+
+Code snippets in this repository are MIT-licensed. All API and MCP data responses are governed by https://atlasunited.io/terms (for your own internal use only; no resale, redistribution, or AI/ML model training without a separate written license).
