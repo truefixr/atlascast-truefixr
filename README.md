@@ -1,6 +1,6 @@
 # Atlas United API: AtlasCast U.S. Storm Forecasts & Storm History Since 2003
 
-Before a storm arrives, someone has to decide what to bind, who to warn and where to send crews. Atlas United shows which U.S. addresses are in a storm's forecast path, up to ten days ahead. It grades each county A to F and ranks the addresses across ten perils, refreshed four times a day, built on AEPM, our patent-pending hazard model. The same API returns the storm record near a U.S. address back to 2003.
+Before a storm arrives, someone has to decide what to bind, who to warn and where to send crews. Atlas United shows which U.S. addresses are in a storm's forecast path, up to ten days ahead. It grades each county A to F and ranks the addresses across ten perils, refreshed four times a day. The same API returns the storm record near a U.S. address back to 2003.
 
 ## Datasets & Pricing
 
